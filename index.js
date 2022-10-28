@@ -8,6 +8,7 @@ const session = require('express-session');
 const passport = require("passport");
 const flash = require('express-flash');
 const passportLocalMongoose = require("passport-local-mongoose");
+const methodOverride = require('method-override');
 const LocalStrategy = require('passport-local').Strategy
 const User = require(__dirname + '/models/user.js');
 const Order = require(__dirname + '/models/order.js');
@@ -46,70 +47,86 @@ app.use(session({
   resave:false,
   saveUninitialized:false
 }));
-
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Passport Verify is User info is correct
 // or Wrong.
-passport.use(new LocalStrategy({
 
-    usernameField: 'email',
-
-  },User.authenticate()));
-
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use('register',new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password',
+  passReqToCallback:true
+},
+  function(req,email, password, done) {
+      User.findOne({ email: email }, function(err, user) {
+      if (err) { return done(err); }
+      if (user) { return done(null, false,{message:"This User is already Taken"}); }else{
+          var newUser = new User();
+          newUser.email = email;
+          newUser.password = newUser.generateHash(password);
+          newUser.save(function(err){
+          if(err) throw err;
+          return done(null,newUser);
+      });
+      }
+      });
+}));
+passport.use('login',new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password',
+  passReqToCallback:true
+},
+  function(req,email, password, done) {
+    User.findOne({ email: email }, function (err, user) {
+    if (err) { return done(err); }
+    if (!user) { return done(null, false,{message:"This User Does not Exist"}); }
+    if (!user.validPassword(password)) { return done(null, false,{message:"Wrong Password"}); }
+    return done(null, user);
+  });
+  }
+));
+passport.serializeUser(function(user, done) {
+        done(null, user.id);
+    });
+passport.deserializeUser(function(id, done) {
+        User.findById(id, function(err, user) {
+            done(err, user);
+        });
+    });
 
 
 app.get("/", function(req,res){
   res.render("firstpage");
 });
 
-app.get("/login", function(req,res){
-
+app.get("/login",checkNotAuthenticated ,function(req,res){
   res.render("login");
 });
 
-app.post('/login',function(req,res){
-  const user = new User({
-    username:req.body.email,
-    password:req.body.password
-  });
-  req.login(user,function(err){
-    if(err){
-      res.redirect('/login');
-    }else{
-      passport.authenticate("local",{successRedirect: "/home",failureRedirect: "/login",})(req, res, function(){
-          res.redirect('/home');
-      });
-    }
-  })
-});
+app.post('/login',
+  passport.authenticate('login', { successRedirect: '/home',
+                                   failureRedirect: '/login',
+                                   failureFlash: true })
+);
 
-app.get("/logout", function(req, res){
+app.get("/logout",function(req, res){
   req.logout(req.user, err => {
     if(err) return next(err);
     res.redirect("/");
   });
 });
 
-app.get("/register", function(req,res){
-  res.render("register");
+app.get("/register",checkNotAuthenticated,function(req,res){
+  res.render('register');
 });
 
-app.post('/register', function(req, res){
-    User.register({username: req.body.email}, req.body.password, function(err, user){
-        if(err){
-            console.log(err);
-            res.redirect('/register');
-        } else {
-            passport.authenticate("local")(req, res, function(){
-                res.redirect('/login');
-            });
-        }
-    });
-});
+app.post('/register',
+  passport.authenticate('register', { successRedirect: '/login',
+                                   failureRedirect: '/register',
+                                   failureFlash: true })
+);
 
 app.get("/home",function(req,res){
   if (req.isAuthenticated()){
@@ -251,6 +268,12 @@ app.get('/contact',function(req,res){
   res.render("contact");
 });
 
+function checkNotAuthenticated(req,res,next){
+  if (req.isAuthenticated()){
+    return res.redirect('/home');
+  }
+   next()
+}
 
 app.listen(3000,function(){
   console.log("Server is running on port 3000")

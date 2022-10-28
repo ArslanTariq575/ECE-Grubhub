@@ -21,6 +21,11 @@
       left:5px;"
       >Member Login</h1>
       <div class="login">
+         <div class="error">
+           <% if(messages.error) { %>
+           <%= messages.error %>
+              <% } %>
+         </div>
         <form action="/login" method="POST">
           <input type="text" placeholder="email-address" id="email" name="email" required>
           <input type="password" placeholder="password" id="password" name ="password" required>
