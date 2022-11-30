@@ -16,7 +16,7 @@ body{
   text-align: center;
   height: 100px;
   width: 100%;
-  background-image: url(/images/top.png);
+  /*background-image: url(/images/top.png);*/
   background-repeat: no-repeat;
 }
 .middle{
@@ -34,8 +34,6 @@ body{
   background-image: url(/images/bottom.png);
   background-repeat: no-repeat;
 }
-
-
 
 html { height: 100% }
 ::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
