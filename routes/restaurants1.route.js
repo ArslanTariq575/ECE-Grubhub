@@ -195,7 +195,7 @@ router.get("/",function(req,res){
 
       
     }
-    res.redirect("restOne");
+    res.redirect("/RutgersECEFastFood");
 });
 
 
