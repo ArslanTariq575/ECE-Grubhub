@@ -7,5 +7,5 @@ var reviewSchema = new mongoose.Schema({
     message        : String
 });
 
-const Review = new mongoose.model("Review",reviewSchema,"reviews");
+const Review = new mongoose.model("Review",reviewSchema);
 module.exports = Review;

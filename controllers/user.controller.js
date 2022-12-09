@@ -3,6 +3,9 @@ const { check, validationResult } = require('express-validator');
 const { ConnectionPolicyPage } = require('twilio/lib/rest/voice/v1/connectionPolicy');
 const e = require('connect-flash');
 
+const Order = require('../models/order');
+const UserOrder = require('../models/invoice');
+const Review = require('../models/review');
 const bcrypt = require('bcrypt')
 
 generateEncryptedPassword = function(password){
@@ -28,10 +31,24 @@ exports.render_login = function(req,res) {
 }
 
 exports.user_profile = function (req,res){
-    res.render("profile",{
-        errors: req.flash('errors'),
-        error: req.flash('error'),
-        user:req.user});
+    var name = req.user.name
+    User.findOne({name:name},function(err,found){
+     UserOrder.find({name:name},function(err,results){
+        Review.find({name:name},function(err,review){
+            res.render("profile",{
+                errors: req.flash('errors'),
+                error: req.flash('error'),
+                name: req.user.name,
+                username:found.username,
+                email : found.email ,
+                address: found.deliveryAddress,
+                newListItems:results,
+                newListItem:review})
+        })
+     })
+        
+    })
+    
 }
 
 exports.render_edit_profile = function (req,res){

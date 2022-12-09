@@ -8,9 +8,14 @@ router.use(bodyParser.urlencoded({ extended: true }));
 const Review = require('../models/review');
 var time = new Date().toLocaleTimeString(); // 11:18:48 AM
 
+var twentyMinutesLater = new Date();
+twentyMinutesLater.setMinutes(twentyMinutesLater.getMinutes() + 20)
+var btime = twentyMinutesLater.toLocaleTimeString()
+
+
 router.get("/",function(req,res){
   var name = req.user.name
-  res.render("review",{time:time,name:name})
+  res.render("review",{time:time,name:name,actuallytime:btime})
 })
 
 router.post("/",function(req,res){
