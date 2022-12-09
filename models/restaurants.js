@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 var restaurantsSchema = new mongoose.Schema({
   restaurantName:     String,
   restaurantaddress:  String,
+  vendorname       :  String,
   productOneName:     String,
   productOnePrice:    Number,
   productOneimageurl: String,

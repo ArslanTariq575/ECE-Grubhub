@@ -3,12 +3,16 @@ const Restaurant = require('../models/restaurants');
 
 exports.renderVendorPage = function (req,res) {
     var userInfo = req.user.email
+    var name     = req.user.name
     User.findOne({email:userInfo},function(err,foundUser){
     if(foundUser.vendor === "no"){
       console.log("For Vendors Only")
       res.redirect('home')
     }else{
-      res.render("vendor")
+      Restaurant.find({},function(err,foundrestaurant){
+        res.render("vendor",{newListItems:foundrestaurant,name:name})
+      })
+      
     }
   })
 }
@@ -51,9 +55,13 @@ exports.createResturant = function (req,res) {
   var prodSixPrice = req.body.productSixPrice;
   var prodSiximageurl = req.body.productSixImageurl;
 
+  var owner = req.body.vendorname;
+  var address = req.body.storeaddress;
+
   var CreateRestaurant = Restaurant({
-    restaurantName:     restaurantName,
-    restaurantaddress:  "57 test Ave",
+    restaurantName    :  restaurantName,
+    restaurantaddress :  address,
+    vendorname        :  owner,
 
     productOneName:      prodOnename,
     productOnePrice:     prodOnePrice,
@@ -83,6 +91,6 @@ exports.createResturant = function (req,res) {
 
   CreateRestaurant.save();
   console.log("restaurant have successfully created")
-  res.render("success",{Subject:"Your"+" "+restaurantName+" "+"have been successfully upload to ECE GRUBHUB.",
+  res.render("vendorsuccess",{Subject:"Your"+" "+restaurantName+" "+"have been successfully upload to ECE GRUBHUB.",
                           message:"As Always Thank you choosing Rutgers ECE "});
 }

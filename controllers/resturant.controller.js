@@ -352,6 +352,7 @@ exports.link_order_and_user = function(req,res) {
         var cvv             =  req.body.cvv;
         var restaurentName  =  found.restaurantname;
         var price = found.bill;
+        var pro   = process.env.PRO
 
 
     const errors = validationResult(req);
@@ -376,7 +377,10 @@ exports.link_order_and_user = function(req,res) {
         console.log("Invalid Expiration Date");
         res.redirect("checkout");
         }else{
-
+          var b = found.bill
+          if (req.body.promo === pro){
+             b = (found.bill) * (.5)
+          }
         let mailTransporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -408,7 +412,7 @@ exports.link_order_and_user = function(req,res) {
             productFivequantity : found.productFivequantity,
             productSixname      : found.productSixname,
             productSixquantity  : found.productSixquantity,
-            bill                : found.bill
+            bill                : b
         })
         CreateOrder.save()
         mailTransporter.sendMail(mailDetails, function(err, data) {

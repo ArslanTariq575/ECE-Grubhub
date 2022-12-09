@@ -44,9 +44,7 @@ app.use(flash());
 
 
 //Route for Home Page
-app.get('/', (req,res)=> {
-  var result = sentiment.analyze('ece grubhub delivers fast.I love it');
-  console.dir(result.score);    
+app.get('/', (req,res)=> {    
     res.render("firstpage");
  })
 
@@ -85,11 +83,11 @@ app.use('/contact', contact);
 
 const review = require("./routes/review.route");
 app.use("/review",review)
-/*
+
 //config for Contact Success Page
 const contactSuccess = require('./routes/contactSuccess.route');
 app.use('/contact/Success', contactSuccess);
-*/
+
 
 //config for Vendor Page
 const vendors = require('./routes/vendor.route');
