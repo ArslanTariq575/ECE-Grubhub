@@ -13,6 +13,8 @@ const passportSetup = require('./config/passport-setup');
 const client = require("twilio")(process.env.ACCOUNT_SID,process.env.AUTH_TOKEN);
 const Restaurant = require('./models/restaurants');
 const Order = require('./models/order');
+var Sentiment = require('sentiment');
+var sentiment = new Sentiment();
 
 PORT = 3000;
 
@@ -43,6 +45,8 @@ app.use(flash());
 
 //Route for Home Page
 app.get('/', (req,res)=> {
+  var result = sentiment.analyze('ece grubhub delivers fast.I love it');
+  console.dir(result.score);    
     res.render("firstpage");
  })
 
@@ -54,6 +58,7 @@ app.use('/user', users);
 const resturants = require('./routes/resturant.route');
 app.use('/resturants', resturants);
 
+/*
 // This Display Template of any resturant
 const acutalresturants = require('./routes/acutalresturants.route');
 app.use('/resturants/',acutalresturants);
@@ -64,6 +69,8 @@ app.use('/resturants/',checkout );
 
 const checkoutsuccess = require('./routes/checkoutsuccess.route');
 app.use('/resturants/',checkoutsuccess );
+*/
+
 //config for profile route
 const profile = require('./routes/profile.route');
 app.use('/profile',profile);
@@ -76,19 +83,23 @@ app.use('/about', about);
 const contact = require('./routes/contact.route');
 app.use('/contact', contact);
 
+const review = require("./routes/review.route");
+app.use("/review",review)
+/*
 //config for Contact Success Page
 const contactSuccess = require('./routes/contactSuccess.route');
 app.use('/contact/Success', contactSuccess);
-
+*/
 
 //config for Vendor Page
 const vendors = require('./routes/vendor.route');
 app.use('/vendor', vendors);
 
+/*
 //config for Vendor Publish Page
 const vendorPublish = require('./routes/vendorRestCreate.route');
 app.use('/vendor/createRestaurant', vendorPublish);
-
+*/
 
 
 app.get("/logout", function(req, res){

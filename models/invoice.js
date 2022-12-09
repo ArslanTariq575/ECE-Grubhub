@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-var userorderSchema = new mongoose.Schema({
+var invoiceSchema = new mongoose.Schema({
   restaurantname      : String,
   email               : String,
   ordernumber         : String,
@@ -24,5 +24,5 @@ var userorderSchema = new mongoose.Schema({
 });
 
 
-const UserOrder = new mongoose.model("UserOrder",userorderSchema);
-module.exports = UserOrder;
+const Invoice = new mongoose.model("Invoice",invoiceSchema);
+module.exports = Invoice;

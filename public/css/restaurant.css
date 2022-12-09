@@ -4,7 +4,13 @@ html {
   min-height: 1000px;
   font-family: 'helvetica neue';
 }
-
+.link
+{
+   color:#2B3A55;
+   text-decoration: none;
+   background-color: none;
+   
+}
 h1 {
   color: #495579;
   text-align: center;
