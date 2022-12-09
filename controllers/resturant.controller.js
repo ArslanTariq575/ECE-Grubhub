@@ -350,7 +350,7 @@ exports.link_order_and_user = function(req,res) {
         var month           =  req.body.month;
         var year            =  req.body.year;
         var cvv             =  req.body.cvv;
-        var restaurentName  = found.restaurantname;
+        var restaurentName  =  found.restaurantname;
         var price = found.bill;
 
 
@@ -391,7 +391,7 @@ exports.link_order_and_user = function(req,res) {
             text: 'Hi,'+" "+name+" "+'Thank you for choosing'+" "+found.restaurantname+" "+"resturant. We are currently preparing your food and the estimated time to up is xyz.Your"+" "+"Order Number is"+" "+"ECE"+ordernumber+"."+" "+"Thank You for choosing ECE GRUBHUB."
         };
         var CreateOrder = UserOrder({
-            restaurantname      : found.restaurantname,
+            restaurantname      : customResturants,
             email               : Email,
             ordernumber         : "ECE"+ordernumber,
             username            : FirstName+" "+LastName,
