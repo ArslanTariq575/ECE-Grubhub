@@ -1,5 +1,5 @@
-# Software_Engineering_Group1
-This is the project for Software Engineering, created by Group 1
+# Software_Engineering
+This is the project for Software Engineering, created by Arslan Tariq
 
 
 ## Requirements to run the project :-
@@ -22,7 +22,4 @@ Someone will soon look at your request and merge it with the main branch.
 ## MangoDB :-
 I will invite everyone soon.
 
-Database Access :-\
-Username : ECE_GrubHub_Admin\
-Password : DaJoUVFGGBzWVC7z\
-** Has all controls. Please use it carefully **
+
